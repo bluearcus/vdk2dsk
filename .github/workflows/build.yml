@@ -49,15 +49,20 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
+    # Allow both release and manual dispatch
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Download all build artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-      - name: Display downloaded files (for debug)
+      - name: Show files for debugging
         run: ls -R artifacts
       - name: Upload to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: artifacts/**/*
+          # Only set these when running on a release event
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # For manual trigger, you may want to specify a tag manually or add logic for filling release data.
