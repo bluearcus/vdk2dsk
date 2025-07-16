@@ -15,26 +15,49 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up CMake
         uses: jwlawson/actions-setup-cmake@v2
-
       - name: Install dependencies (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: sudo apt-get update && sudo apt-get install -y build-essential
-
       - name: Install dependencies (macOS)
         if: matrix.os == 'macos-latest'
         run: brew install cmake
-
       - name: Configure and Build
         run: |
           cmake -S . -B build
           cmake --build build --config Release
-
       - name: Package Artifacts
         run: |
-          cd
+          cd build
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            7z a ../vdk2dsk-${{ matrix.os }}.zip *
+          else
+            tar -czvf ../vdk2dsk-${{ matrix.os }}.tar.gz *
+          fi
+        shell: bash
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vdk2dsk-${{ matrix.os }}
+          path: |
+            vdk2dsk-*.tar.gz
+            vdk2dsk-*.zip
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Display downloaded files (for debug)
+        run: ls -R artifacts
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
