@@ -8,6 +8,10 @@ on:
   release:
     types: [created]
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag to upload artifacts to'
+        required: false
 
 jobs:
   build:
@@ -51,7 +55,6 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
-    # Allow both release and manual dispatch
     if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Download all build artifacts
@@ -64,7 +67,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: artifacts/**/*
-          # Only set these when running on a release event
+          tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # For manual trigger, you may want to specify a tag manually or add logic for filling release data.
