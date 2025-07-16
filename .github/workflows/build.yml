@@ -37,26 +37,4 @@ jobs:
 
       - name: Package Artifacts
         run: |
-          cd build
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            7z a ../vdk2dsk-${{ matrix.os }}.zip *
-          else
-            tar -czvf ../vdk2dsk-${{ matrix.os }}.tar.gz *
-          fi
-        shell: bash
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vdk2dsk-${{ matrix.os }}
-          path: |
-            vdk2dsk-${{ matrix.os }}.tar.gz
-            vdk2dsk-${{ matrix.os }}.zip
-
-      - name: Upload to GitHub Release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            vdk2dsk-*.tar.gz
-            vdk2dsk-*.zip
+          cd
