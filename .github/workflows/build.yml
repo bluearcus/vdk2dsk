@@ -2,11 +2,12 @@ name: Build and Package
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -58,4 +59,4 @@ jobs:
         with:
           files: |
             vdk2dsk-*.tar.gz
-            vdk2dsk-*.zip            
+            vdk2dsk-*.zip
