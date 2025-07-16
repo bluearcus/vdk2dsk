@@ -14,8 +14,11 @@ vdk2dsk [-f] [-[h|m]] filename.vdk
 Note: The -h and -m options are mutually exclusive; only one may be used at a time.
 If neither -h nor -m is specified, a full-length header is written by default.
 ```
+## Downloading pre-built binaries
 
-## Getting the Source
+Pre-built binaries for the latest release can be found in the GitHub repo releases area.
+
+## Downloading and building from Source
 
 You can obtain the source code in two ways:
 
