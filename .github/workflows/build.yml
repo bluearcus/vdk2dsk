@@ -69,4 +69,4 @@ jobs:
           files: artifacts/**/*
           tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag_name || '' }}          
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.VDK2DSK_build }}
